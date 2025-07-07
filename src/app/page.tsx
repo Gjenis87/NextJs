@@ -13,6 +13,9 @@ const Home = () => {
       onSuccess: () => {
         toast.success("background job started");
       },
+      onError: (error) => {
+        toast.error("Failed to start background job");
+      },
     })
   );
 
@@ -20,7 +23,7 @@ const Home = () => {
     <div className="p-4 max-w-7xl mx-auto">
       <Button
         disabled={invoke.isPending}
-        onClick={() => invoke.mutate({ text: "gjenis" })}
+        onClick={() => invoke.mutate({ text: "gjenis87@gmail.com" })}
       >
         Invoke background job
       </Button>
