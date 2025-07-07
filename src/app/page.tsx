@@ -1,20 +1,33 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
-import { dehydrate, HydrationBoundary, useQuery } from "@tanstack/react-query";
-import { caller, getQueryClient, trpc } from "@/trpc/server";
-import { Suspense } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-const Home = async () => {
-  // const trpc = useTRPC();
-  const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.heloAI.queryOptions({ text: "Gjenis" }));
+const Home = () => {
+  const trpc = useTRPC();
 
-  // const { data } = useQuery(trpc.heloAI.queryOptions({ text: "Antonio" }));
-  // const data = await caller.heloAI({ text: "Gjenis" });
+  const invoke = useMutation(
+    trpc.invoke.mutationOptions({
+      onSuccess: () => {
+        toast.success("background job started");
+      },
+      onError: (error) => {
+        toast.error("Failed to start background job");
+      },
+    })
+  );
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<p>Loading ...</p>}></Suspense>
-    </HydrationBoundary>
+    <div className="p-4 max-w-7xl mx-auto">
+      <Button
+        disabled={invoke.isPending}
+        onClick={() => invoke.mutate({ text: "gjenis87@gmail.com" })}
+      >
+        Invoke background job
+      </Button>
+    </div>
   );
 };
 
